@@ -1,0 +1,11 @@
+.venv/
+__pycache__/
+*.pyc
+.pytest_cache/
+.ipynb_checkpoints/
+.DS_Store
+.env
+# your private data + models trained on it stay on your machine
+data/feedback.csv
+models/
+digests/

@@ -1,0 +1,302 @@
+[
+  {
+    "id": "sample-00",
+    "channel": "sms",
+    "sender": "+15550142",
+    "sender_name": "Mom",
+    "subject": "",
+    "body": "Hi sweetie, are you still coming to dinner Sunday? Grandma wants to know by tonight so she can shop.",
+    "timestamp": "2026-10-07T08:00:00",
+    "expected_important": 1
+  },
+  {
+    "id": "sample-01",
+    "channel": "email",
+    "sender": "priya.raman@halvorsen-partners.com",
+    "sender_name": "Priya Raman",
+    "subject": "Q3 deck before client call",
+    "body": "Hi, can you send me the updated Q3 deck before the 2pm call with Brightline today? I need to review the pricing slide. Thanks!",
+    "timestamp": "2026-10-07T08:07:00",
+    "expected_important": 1
+  },
+  {
+    "id": "sample-02",
+    "channel": "email",
+    "sender": "billing@cityutilities.example",
+    "sender_name": "City Utilities",
+    "subject": "Your bill is past due",
+    "body": "Your electricity bill of $142.80 is past due. Please pay by Oct 14 to avoid a $25 late fee and service interruption.",
+    "timestamp": "2026-10-07T08:14:00",
+    "expected_important": 1
+  },
+  {
+    "id": "sample-03",
+    "channel": "sms",
+    "sender": "72166",
+    "sender_name": "72166",
+    "subject": "",
+    "body": "Your Chase verification code is 482913. Don't share it with anyone. We'll never call to ask for it.",
+    "timestamp": "2026-10-07T09:21:00",
+    "expected_important": 0
+  },
+  {
+    "id": "sample-04",
+    "channel": "email",
+    "sender": "deals@shopwave.example",
+    "sender_name": "ShopWave",
+    "subject": "FLASH SALE 40% off everything",
+    "body": "This weekend only! 40% off sitewide plus free shipping. Use promo code FALL40. Shop now. Unsubscribe | Manage preferences",
+    "timestamp": "2026-10-07T09:28:00",
+    "expected_important": 0
+  },
+  {
+    "id": "sample-05",
+    "channel": "email",
+    "sender": "notification@social.example",
+    "sender_name": "Instagram",
+    "subject": "jake_m liked your photo",
+    "body": "jake_m and 3 others liked your photo. See what's new in your feed.",
+    "timestamp": "2026-10-07T09:35:00",
+    "expected_important": 0
+  },
+  {
+    "id": "sample-06",
+    "channel": "email",
+    "sender": "shipment-tracking@parcelnow.example",
+    "sender_name": "ParcelNow",
+    "subject": "Your order has shipped",
+    "body": "Your order #1182 has shipped and will arrive Thursday. Track your package anytime.",
+    "timestamp": "2026-10-07T10:42:00",
+    "expected_important": 0
+  },
+  {
+    "id": "sample-07",
+    "channel": "sms",
+    "sender": "+15550199",
+    "sender_name": "Dr. Alvarez Dental",
+    "subject": "",
+    "body": "Reminder: your dentist appointment is tomorrow at 9:30am with Dr. Alvarez. Reply C to confirm or call to reschedule.",
+    "timestamp": "2026-10-07T10:49:00",
+    "expected_important": 1
+  },
+  {
+    "id": "sample-08",
+    "channel": "sms",
+    "sender": "+15550177",
+    "sender_name": "Sam (roommate)",
+    "subject": "",
+    "body": "yo the landlord is coming at 4 today to fix the sink, can you be home? i'm stuck at work",
+    "timestamp": "2026-10-07T10:56:00",
+    "expected_important": 1
+  },
+  {
+    "id": "sample-09",
+    "channel": "email",
+    "sender": "newsletter@morningbrew.example",
+    "sender_name": "Market Morning",
+    "subject": "Your daily markets briefing",
+    "body": "Stocks rallied on Tuesday as tech shares rebounded. Here are the five stories you need to know today. You're receiving this because you subscribed. Unsubscribe.",
+    "timestamp": "2026-10-07T11:03:00",
+    "expected_important": 0
+  },
+  {
+    "id": "sample-10",
+    "channel": "sms",
+    "sender": "+18885550111",
+    "sender_name": "+18885550111",
+    "subject": "",
+    "body": "USPS: Your package is on hold due to an incomplete address. Update now at bit.ly/usps-redeliv3r to avoid return.",
+    "timestamp": "2026-10-07T11:10:00",
+    "expected_important": 0
+  },
+  {
+    "id": "sample-11",
+    "channel": "email",
+    "sender": "hr@northwind-co.example",
+    "sender_name": "Northwind HR",
+    "subject": "ACTION REQUIRED: Benefits enrollment closes Friday",
+    "body": "Open enrollment for 2027 benefits closes this Friday, Oct 10. If you don't make a selection, you'll be defaulted into last year's plan. Please complete enrollment in the HR portal.",
+    "timestamp": "2026-10-07T11:17:00",
+    "expected_important": 1
+  },
+  {
+    "id": "sample-12",
+    "channel": "email",
+    "sender": "jordan.lee@gmail.example",
+    "sender_name": "Jordan Lee",
+    "subject": "Wedding - can you be a groomsman?",
+    "body": "Hey! Taylor and I set the date for June 14. Would you be one of my groomsmen? Would mean a lot. Let me know when you get a chance.",
+    "timestamp": "2026-10-07T12:24:00",
+    "expected_important": 1
+  },
+  {
+    "id": "sample-13",
+    "channel": "email",
+    "sender": "no-reply@streamflix.example",
+    "sender_name": "StreamFlix",
+    "subject": "New this week on StreamFlix",
+    "body": "Five new shows we think you'll love. Start watching now. View in browser.",
+    "timestamp": "2026-10-07T12:31:00",
+    "expected_important": 0
+  },
+  {
+    "id": "sample-14",
+    "channel": "email",
+    "sender": "alerts@firstbank.example",
+    "sender_name": "First Bank",
+    "subject": "Unusual sign-in attempt",
+    "body": "We noticed a sign-in to your account from a new device in Denver, CO. If this wasn't you, secure your account immediately.",
+    "timestamp": "2026-10-07T12:38:00",
+    "expected_important": 1
+  },
+  {
+    "id": "sample-15",
+    "channel": "sms",
+    "sender": "+15550142",
+    "sender_name": "Mom",
+    "subject": "",
+    "body": "Also dad says happy early birthday 🎂",
+    "timestamp": "2026-10-07T13:45:00",
+    "expected_important": 0
+  },
+  {
+    "id": "sample-16",
+    "channel": "email",
+    "sender": "recruiting@talentpath.example",
+    "sender_name": "Alicia Gomez",
+    "subject": "Interview availability - Data Scientist role",
+    "body": "Hi, thanks for applying to the Data Scientist position at Lumen Analytics. Are you available for a 30-minute phone screen Wednesday or Thursday afternoon? Please reply with times that work.",
+    "timestamp": "2026-10-07T13:52:00",
+    "expected_important": 1
+  },
+  {
+    "id": "sample-17",
+    "channel": "email",
+    "sender": "team@productivity.example",
+    "sender_name": "Taskly",
+    "subject": "Tips: 5 ways to organize your week",
+    "body": "Get more done with these five quick tips. Upgrade to Pro for 20% off - limited time. Unsubscribe.",
+    "timestamp": "2026-10-07T13:59:00",
+    "expected_important": 0
+  },
+  {
+    "id": "sample-18",
+    "channel": "sms",
+    "sender": "+15550133",
+    "sender_name": "Chris",
+    "subject": "",
+    "body": "lol did you see the game last night",
+    "timestamp": "2026-10-07T14:06:00",
+    "expected_important": 0
+  },
+  {
+    "id": "sample-19",
+    "channel": "email",
+    "sender": "calendar-notification@workspace.example",
+    "sender_name": "Google Calendar",
+    "subject": "Updated invitation: Team sync moved to 3pm",
+    "body": "The Team sync on Thursday has been moved from 10am to 3pm by Dana Whitfield.",
+    "timestamp": "2026-10-07T14:13:00",
+    "expected_important": 1
+  },
+  {
+    "id": "sample-20",
+    "channel": "email",
+    "sender": "orders@cornercafe.example",
+    "sender_name": "Corner Cafe",
+    "subject": "Your receipt",
+    "body": "Thanks for your order! Total: $8.45. See you next time.",
+    "timestamp": "2026-10-07T14:20:00",
+    "expected_important": 0
+  },
+  {
+    "id": "sample-21",
+    "channel": "sms",
+    "sender": "+15550188",
+    "sender_name": "Aunt Ruth",
+    "subject": "",
+    "body": "Call me when you can, it's about Grandpa. Nothing scary but want to talk today.",
+    "timestamp": "2026-10-07T15:27:00",
+    "expected_important": 1
+  },
+  {
+    "id": "sample-22",
+    "channel": "email",
+    "sender": "donotreply@city-library.example",
+    "sender_name": "City Library",
+    "subject": "Items due soon",
+    "body": "Reminder: 2 items are due on Oct 15. Renew online to avoid late fees.",
+    "timestamp": "2026-10-07T15:34:00",
+    "expected_important": 0
+  },
+  {
+    "id": "sample-23",
+    "channel": "email",
+    "sender": "winner-desk@prize-claims.example",
+    "sender_name": "Prize Center",
+    "subject": "Congratulations! You've been selected",
+    "body": "You have been selected to receive a $1,000 gift card. Click here to claim your reward within 24 hours. Limited time.",
+    "timestamp": "2026-10-07T15:41:00",
+    "expected_important": 0
+  },
+  {
+    "id": "sample-24",
+    "channel": "email",
+    "sender": "maria.chen@northwind-co.example",
+    "sender_name": "Maria Chen",
+    "subject": "Re: budget numbers",
+    "body": "Thanks - got it. No action needed on your end, I'll fold these into the forecast.",
+    "timestamp": "2026-10-07T16:48:00",
+    "expected_important": 0
+  },
+  {
+    "id": "sample-25",
+    "channel": "sms",
+    "sender": "+15550177",
+    "sender_name": "Sam (roommate)",
+    "subject": "",
+    "body": "rent is due on the 1st, venmo me $850 when you get a chance",
+    "timestamp": "2026-10-07T16:55:00",
+    "expected_important": 1
+  },
+  {
+    "id": "sample-26",
+    "channel": "email",
+    "sender": "updates@linkedin.example",
+    "sender_name": "LinkedIn",
+    "subject": "You appeared in 12 searches this week",
+    "body": "See who's looking at your profile. Try Premium free for 1 month.",
+    "timestamp": "2026-10-07T16:02:00",
+    "expected_important": 0
+  },
+  {
+    "id": "sample-27",
+    "channel": "email",
+    "sender": "professor.wu@university.example",
+    "sender_name": "Prof. Helen Wu",
+    "subject": "Recommendation letter",
+    "body": "I'm happy to write your recommendation letter. Could you send me your resume and the job description by Monday so I have time to write it?",
+    "timestamp": "2026-10-07T17:09:00",
+    "expected_important": 1
+  },
+  {
+    "id": "sample-28",
+    "channel": "sms",
+    "sender": "39752",
+    "sender_name": "39752",
+    "subject": "",
+    "body": "CVS Pharmacy: Your prescription is ready for pickup at 120 Main St. Reply STOP to opt out.",
+    "timestamp": "2026-10-07T17:16:00",
+    "expected_important": 1
+  },
+  {
+    "id": "sample-29",
+    "channel": "email",
+    "sender": "events@meetup.example",
+    "sender_name": "Meetup",
+    "subject": "3 new events near you",
+    "body": "Data Science NYC is hosting a talk next week. RSVP now.",
+    "timestamp": "2026-10-07T17:23:00",
+    "expected_important": 0
+  }
+]
