@@ -8,6 +8,7 @@ import pandas as pd
 import plotly.express as px
 import streamlit as st
 
+import tour
 from inbox_signal import config, ingest, personal
 from inbox_signal.digest import build_markdown, deliver
 from inbox_signal.scorer import score_messages
@@ -21,7 +22,8 @@ ss = st.session_state
 # ---------- sidebar ----------
 st.sidebar.title("📬 Inbox Signal")
 st.sidebar.caption("Reads your emails + texts, shows you only what matters")
-page = st.sidebar.radio("Steps", ["1 · Load messages", "2 · Triage", "3 · Digest", "4 · Teach it", "How it works"])
+page = st.sidebar.radio("Steps", ["👋 Start here", "1 · Load messages", "2 · Triage", "3 · Digest", "4 · Teach it",
+                                 "How it works"], key="page")
 st.sidebar.divider()
 vips_text = st.sidebar.text_area("VIPs (one per line: names, emails, numbers)",
                                  value=ss.get("vips_text", "Mom"), height=90)
@@ -31,13 +33,58 @@ st.sidebar.markdown(f"**Model (Hugging Face)**\n\n`{config.ZERO_SHOT_MODEL}`")
 st.sidebar.caption("Runs 100% locally. Your messages never leave this computer unless you choose a delivery option.")
 
 
+def esc(text) -> str:
+    """Streamlit renders text between two $ signs as LaTeX math - escape them."""
+    return str(text).replace("$", "\\$")
+
+
 def run_scoring():
     with st.spinner(f"Classifying {len(ss.messages)} messages with the zero-shot model (~1-2 s each on a laptop CPU)…"):
         ss.scored = score_messages(ss.messages, vips=vips)
 
 
+# ======================= START HERE =======================
+def _start_demo():
+    ss.messages = ingest.load_json(ROOT / "data/sample/messages.json")
+    ss.pop("scored", None)
+    ss.page = "2 · Triage"
+
+
+if page.startswith("👋"):
+    tour.render(
+        kicker="NLP · Zero-shot classification · Human-in-the-loop",
+        title="📬 Inbox Signal",
+        subtitle="Hundreds of emails and texts a day. A handful actually matter. "
+                 "This reads them all and sends you only those, with the reason why.",
+        gradient=("#0d9488", "#2563eb"), accent="#0d9488",
+        steps=[
+            {"emoji": "📥", "title": "Gather everything",
+             "text": "Gmail, Outlook, exported email, Mac Messages, Android texts, all converted into one format.",
+             "hood": "IMAP · email · sqlite3"},
+            {"emoji": "🧠", "title": "Ask a language model",
+             "text": "“Is this a bill? A friend? A promo? A scam?” The model answers in plain English, no training needed.",
+             "hood": "zero-shot DeBERTa from Hugging Face"},
+            {"emoji": "🚩", "title": "Spot the signals",
+             "text": "Deadlines, “ASAP”, money, questions aimed at you, VIPs… and unsubscribe links and sketchy short URLs.",
+             "hood": "explainable regex rules"},
+            {"emoji": "💯", "title": "Score 0-100",
+             "text": "Each message gets a score and a list of reasons, so you can always see why.",
+             "hood": "weighted blend of model + rules"},
+            {"emoji": "📲", "title": "Send the digest",
+             "text": "Only the important stuff goes to your phone, email or Slack, on a schedule.",
+             "hood": "ntfy · SMTP · Slack · cron"},
+            {"emoji": "👍", "title": "Teach it your taste",
+             "text": "Thumbs up/down trains a personal model. It asks about the messages it's least sure of first.",
+             "hood": "TF-IDF + logistic regression, active learning"},
+        ],
+        chips=["🤗 DeBERTa-v3 zero-shot", "🤗 DistilBERT fine-tune", "scikit-learn", "PyTorch", "Streamlit", "100% local"],
+    )
+    st.button("▶  Try it with a sample inbox (30 messages)", type="primary", on_click=_start_demo)
+    st.caption("The sample people and companies are fictional. Connect your real inbox on step 1. "
+               "It all runs on your computer.")
+
 # ======================= 1. LOAD =======================
-if page.startswith("1"):
+elif page.startswith("1"):
     st.header("Step 1 · Load messages")
     st.caption("Everything is converted to one format: channel, sender, subject, body, time.")
     src = st.radio("Source", ["Sample inbox (30 fictional messages)", "Upload a file", "Email via IMAP", "Mac Messages (iMessage/SMS)"])
@@ -122,11 +169,11 @@ elif page.startswith("2"):
     show = st.multiselect("Show tiers", ["important", "maybe", "skip"], default=["important", "maybe"])
     for _, r in sc[sc["tier"].isin(show)].iterrows():
         icon = "✉️" if r["channel"] == "email" else "💬"
-        with st.expander(f"{icon} {r['score']:.0f} · {r['from']} — {r['gist'][:90]}"):
-            st.write(r["text"])
+        with st.expander(esc(f"{icon} {r['score']:.0f} · {r['from']} — {r['gist'][:90]}")):
+            st.markdown(esc(r["text"]))
             st.markdown("**Why this score**")
             for reason in r["reasons"]:
-                st.markdown(f"- {reason}")
+                st.markdown(f"- {esc(reason)}")
             probs = pd.Series({k[2:]: v for k, v in r.items() if k.startswith("p_")}).sort_values()
             st.plotly_chart(px.bar(probs, orientation="h", labels={"value": "probability", "index": ""},
                                    height=260).update_layout(showlegend=False, margin=dict(t=10, b=0)),
@@ -141,7 +188,7 @@ elif page.startswith("3"):
         st.info("Score messages first (step 2).")
         st.stop()
     md = build_markdown(sc)
-    st.markdown(md)
+    st.markdown(esc(md))
     st.divider()
     st.subheader("Send it to yourself")
     method = st.selectbox("Delivery", ["file", "ntfy", "email", "slack"],
@@ -190,7 +237,7 @@ elif page.startswith("4"):
     todo = todo.assign(uncertainty=(todo["score"] - config.IMPORTANT_THRESHOLD).abs()).sort_values("uncertainty")
     for _, r in todo.head(10).iterrows():
         cols = st.columns([6, 1, 1])
-        cols[0].markdown(f"**{r['from']}** · score {r['score']:.0f}  \n{r['gist']}")
+        cols[0].markdown(f"**{esc(r['from'])}** · score {r['score']:.0f}  \n{esc(r['gist'])}")
         if cols[1].button("👍", key=f"up-{r['id']}", help="Important"):
             personal.add_feedback(r["id"], r["text"], r["from"], True)
             st.rerun()
