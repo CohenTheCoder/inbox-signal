@@ -1,0 +1,313 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Inbox Signal Playground</title>
+<meta name="description" content="Try Inbox Signal in your browser: score any message with a zero-shot language model, see the digest, and explore the precision/recall trade-off.">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>📬</text></svg>">
+<style>
+:root {
+  --accent: #0d9488; --accent2: #2563eb; --bg: #f8fafc; --card: #ffffff; --text: #0f172a; --muted: #475569;
+  --line: #e2e8f0; --soft: #f1f5f9; --pos: #16a34a; --neg: #dc2626; --neu: #94a3b8; --warn: #f59e0b;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) { --bg: #0b1120; --card: #111827; --text: #e5e7eb; --muted: #9ca3af; --line: #1f2937; --soft: #1f2937; }
+}
+:root[data-theme="dark"] { --bg: #0b1120; --card: #111827; --text: #e5e7eb; --muted: #9ca3af; --line: #1f2937; --soft: #1f2937; }
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--bg); color: var(--text); font: 16px/1.55 Inter, -apple-system, "Segoe UI", Helvetica, Arial, sans-serif; }
+a { color: var(--accent); }
+.wrap { max-width: 1080px; margin: 0 auto; padding: 0 16px 60px; }
+.hero { background: linear-gradient(135deg, var(--accent), var(--accent2)); color: #fff; border-radius: 0 0 24px 24px; padding: 34px 0 28px; margin-bottom: 22px; }
+.hero .wrap { padding-bottom: 0; }
+.kicker { font-size: 13px; letter-spacing: .14em; text-transform: uppercase; opacity: .85; font-weight: 700; }
+.hero h1 { font-size: clamp(30px, 5vw, 46px); margin: 6px 0; line-height: 1.1; }
+.hero p { margin: 0; font-size: 18px; opacity: .95; max-width: 760px; }
+.pills { margin-top: 14px; display: flex; flex-wrap: wrap; gap: 8px; }
+.pill { background: rgba(255,255,255,.16); border: 1px solid rgba(255,255,255,.35); color: #fff; border-radius: 999px; padding: 4px 12px; font-size: 13px; font-weight: 600; text-decoration: none; }
+.tabs { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 16px; }
+.tab { border: 1px solid var(--line); background: var(--card); color: var(--text); border-radius: 999px; padding: 8px 16px; font: inherit; font-weight: 600; cursor: pointer; }
+.tab[aria-selected="true"] { background: var(--accent); color: #fff; border-color: var(--accent); }
+.panel { display: none; } .panel.on { display: block; }
+.card { background: var(--card); border: 1px solid var(--line); border-radius: 16px; padding: 20px; margin-bottom: 16px; }
+.card h2 { margin: 0 0 4px; font-size: 21px; } .card h3 { margin: 0 0 8px; font-size: 17px; }
+.sub { color: var(--muted); margin: 0 0 14px; font-size: 15px; }
+textarea, input[type=text] { width: 100%; border: 1px solid var(--line); border-radius: 12px; padding: 11px 12px; font: inherit; background: var(--soft); color: var(--text); }
+textarea { min-height: 100px; resize: vertical; }
+label { font-weight: 600; font-size: 14px; display: block; margin: 8px 0 4px; }
+.row { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+.row3 { display: grid; grid-template-columns: 1.3fr 1fr; gap: 18px; }
+@media (max-width: 760px) { .row, .row3 { grid-template-columns: 1fr; } }
+.btn { background: var(--accent); color: #fff; border: 0; border-radius: 12px; padding: 10px 18px; font: inherit; font-weight: 700; cursor: pointer; }
+.btn:disabled { opacity: .5; cursor: wait; }
+.chips { display: flex; gap: 6px; flex-wrap: wrap; margin: 8px 0 12px; }
+.chip { border: 1px solid var(--line); background: var(--soft); color: var(--text); border-radius: 999px; padding: 4px 11px; font: inherit; font-size: 13.5px; cursor: pointer; }
+.chip:hover, .chip.on { border-color: var(--accent); }
+.status { font-size: 14px; color: var(--muted); margin: 10px 0 0; min-height: 20px; }
+.bar { height: 9px; border-radius: 6px; background: var(--soft); overflow: hidden; }
+.bar > i { display: block; height: 100%; background: var(--accent); }
+.badge { display: inline-block; padding: 3px 11px; border-radius: 999px; color: #fff; font-weight: 700; font-size: 13px; }
+.metrics { display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 12px; margin: 12px 0; }
+.metric { background: var(--soft); border-radius: 12px; padding: 12px 14px; }
+.metric b { display: block; font-size: 26px; line-height: 1.2; } .metric span { font-size: 13px; color: var(--muted); }
+.hood { background: var(--soft); border-radius: 12px; padding: 10px 14px; font-size: 14px; color: var(--muted); margin-top: 12px; }
+.reasons li { margin: 3px 0; }
+.msg { border: 1px solid var(--line); border-radius: 12px; padding: 10px 14px; margin: 8px 0; }
+.msg summary { cursor: pointer; display: flex; gap: 10px; align-items: center; list-style: none; }
+.msg summary::-webkit-details-marker { display: none; }
+.score { min-width: 44px; height: 44px; border-radius: 50%; display: grid; place-items: center; color: #fff; font-weight: 800; }
+.msg .from { font-weight: 700; } .msg .gist { color: var(--muted); font-size: 14px; }
+.phone { width: 290px; max-width: 100%; margin: 0 auto; background: #0f172a; border-radius: 40px; padding: 14px; box-shadow: 0 20px 50px rgba(15,23,42,.25); }
+.screen { background: linear-gradient(160deg, #1e3a8a, #0d9488); border-radius: 30px; min-height: 520px; padding: 46px 12px 16px; position: relative; overflow: hidden; }
+.notch { position: absolute; top: 10px; left: 50%; transform: translateX(-50%); width: 90px; height: 22px; background: #0f172a; border-radius: 12px; }
+.clock { color: #fff; text-align: center; font-size: 44px; font-weight: 300; margin-bottom: 12px; }
+.notif { background: rgba(255,255,255,.88); color: #0f172a; border-radius: 16px; padding: 9px 12px; margin: 7px 0; font-size: 12.5px; line-height: 1.35; }
+.notif b { font-size: 13px; } .notif small { color: #475569; }
+.cm { display: grid; grid-template-columns: auto 1fr 1fr; gap: 6px; font-size: 14px; text-align: center; }
+.cm div { border-radius: 10px; padding: 12px 6px; } .cm .h { background: none; font-weight: 700; color: var(--muted); padding: 4px; }
+.cm b { display: block; font-size: 26px; }
+input[type=range] { width: 100%; accent-color: var(--accent); }
+footer { color: var(--muted); font-size: 13px; text-align: center; margin-top: 30px; }
+</style>
+</head>
+<body>
+<header class="hero">
+  <div class="wrap">
+    <div class="kicker">Inbox Signal · Playground</div>
+    <h1>📬 Is this message important?</h1>
+    <p>A real zero-shot language model runs right on this page. Type any email or text and watch it get categorized, scored and explained, with no install and no server.</p>
+    <div class="pills">
+      <span class="pill">🤗 DeBERTa zero-shot via transformers.js</span>
+      <span class="pill">🔒 Nothing you type leaves your browser</span>
+      <a class="pill" href="https://github.com/CohenTheCoder/inbox-signal">⭐ Code on GitHub</a>
+    </div>
+  </div>
+</header>
+
+<main class="wrap">
+  <div class="tabs" role="tablist">
+    <button class="tab" role="tab" aria-selected="true" data-tab="try">📨 Try a message</button>
+    <button class="tab" role="tab" aria-selected="false" data-tab="inbox">📥 Sample inbox</button>
+    <button class="tab" role="tab" aria-selected="false" data-tab="lab">🎚️ Threshold lab</button>
+  </div>
+
+  <!-- TRY -->
+  <section class="panel on" id="try">
+    <div class="card">
+      <h2>Score any message</h2>
+      <p class="sub">Pick an example or write your own. The model guesses what <i>kind</i> of message it is, rules spot deadlines, scams and VIPs, and you get a 0–100 score with every reason listed.</p>
+      <div class="chips" id="examples"></div>
+      <div class="row3">
+        <div>
+          <div class="row">
+            <div><label for="fromName">From (name)</label><input type="text" id="fromName"></div>
+            <div><label for="fromAddr">Address or phone</label><input type="text" id="fromAddr"></div>
+          </div>
+          <label for="subject">Subject <span class="sub">(blank for a text message)</span></label><input type="text" id="subject">
+          <label for="body">Message</label><textarea id="body"></textarea>
+          <label for="vips">Your VIPs <span class="sub">(comma-separated)</span></label><input type="text" id="vips" value="Mom, boss@company.com">
+          <p><button class="btn" id="scoreBtn">Score it</button></p>
+          <div class="status" id="status"></div>
+        </div>
+        <div id="result"><div class="hood" style="margin-top:28px">👈 Pick an example or write a message, then click <b>Score it</b>.<br><br>The first run downloads the model (87 MB, cached afterward). Scoring takes about a second.</div></div>
+      </div>
+      <div class="hood">🔧 <b>Under the hood:</b> <code>pipeline("zero-shot-classification")</code> turns each category into a sentence ("This message is a bill, payment, or banking notice.") and asks the model how likely that is to be true. No training data needed. The browser uses <b>DeBERTa-v3-xsmall</b> (87 MB). The full app uses the larger <b>DeBERTa-v3-base</b>, which is more accurate, so scores here can differ a little.</div>
+    </div>
+  </section>
+
+  <!-- INBOX -->
+  <section class="panel" id="inbox">
+    <div class="row3">
+      <div class="card">
+        <h2>30 messages in. Here's what made the cut.</h2>
+        <p class="sub">Scored by the full Python pipeline. Click any message to see why it got its score.</p>
+        <div class="chips" id="tierChips"></div>
+        <div id="list"></div>
+      </div>
+      <div>
+        <div class="card" style="background:transparent;border:0;padding:0">
+          <h3 style="text-align:center">📲 What lands on your phone</h3>
+          <div class="phone"><div class="screen"><div class="notch"></div><div class="clock">8:00</div><div id="notifs"></div></div></div>
+          <p class="sub" style="text-align:center;margin-top:10px">Only the top messages are pushed. Everything else waits for you.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- LAB -->
+  <section class="panel" id="lab">
+    <div class="card">
+      <h2>Where should the cutoff be?</h2>
+      <p class="sub">Every message has a score, and anything above the line is "important". Each sample message also has a human label. Move the line and watch the classic trade-off: <b>catch everything</b> (recall) vs. <b>no false alarms</b> (precision).</p>
+      <label for="thr">Cutoff: <span id="thrVal"></span></label>
+      <input type="range" id="thr" min="0" max="100" step="1">
+      <div class="row" style="margin-top:14px">
+        <div>
+          <div class="metrics" id="labMetrics"></div>
+          <div class="cm" id="cm"></div>
+        </div>
+        <div>
+          <h3>🙈 Missed (important but below the line)</h3><div id="missed"></div>
+          <h3 style="margin-top:14px">🔔 False alarms (not important but above)</h3><div id="fa"></div>
+        </div>
+      </div>
+      <div class="hood">🔧 <b>Why this matters:</b> <b>precision</b> = of the messages flagged, how many really mattered. <b>Recall</b> = of the messages that mattered, how many got flagged. Missing a text from your landlord costs more than one extra promo, so the app's default cutoff (55) favors recall. Choosing a threshold from the cost of each kind of mistake is a core data-science decision.</div>
+    </div>
+  </section>
+
+  <footer>Inbox Signal · MIT · All sample names and messages are fictional. Built with transformers.js.</footer>
+</main>
+
+<script type="module">
+import { pipeline, env } from "https://cdn.jsdelivr.net/npm/@huggingface/transformers@3.8.1";
+env.allowLocalModels = false;
+
+const $ = (id) => document.getElementById(id);
+const DATA = await (await fetch("data.json")).json();
+const esc = (s) => String(s ?? "").replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+const css = (v) => getComputedStyle(document.documentElement).getPropertyValue(v).trim();
+const tierColor = (t) => ({ important: css("--neg"), maybe: css("--warn"), skip: css("--neu") }[t]);
+const tierOf = (s) => s >= DATA.important_threshold ? "important" : s >= DATA.maybe_threshold ? "maybe" : "skip";
+const TIER_LABEL = { important: "Important", maybe: "Worth a glance", skip: "Filtered out" };
+
+document.querySelectorAll(".tab").forEach((t) => t.onclick = () => {
+  document.querySelectorAll(".tab").forEach((x) => x.setAttribute("aria-selected", x === t));
+  document.querySelectorAll(".panel").forEach((p) => p.classList.toggle("on", p.id === t.dataset.tab));
+});
+
+// ---------- rules (ported from features.py) ----------
+const R = {
+  urgent: /\b(urgent|asap|immediately|right away|emergency|time[- ]sensitive|action required|overdue|past due|final notice|last chance to respond|deadline|call me|need you|by (?:eod|end of day|tonight|today|tomorrow))\b/i,
+  when: /\b(today|tonight|tomorrow|this (?:morning|afternoon|evening|week)|(?:mon|tues|wednes|thurs|fri|satur|sun)day|(?:jan|feb|mar|apr|may|jun|jul|aug|sep|sept|oct|nov|dec)[a-z]*\.? \d{1,2}|\d{1,2}\/\d{1,2}(?:\/\d{2,4})?|\d{1,2}(?::\d{2})? ?(?:am|pm))\b/i,
+  money: /\$\s?\d[\d,]*(?:\.\d{2})?/,
+  bulk: /\b(unsubscribe|view (?:this email )?in (?:your )?browser|manage (?:your )?preferences|email preferences|% off|promo code|limited time|shop now|newsletter|you're receiving this|reply stop|txt stop|text stop|msg&data rates)\b/i,
+  noreply: /(no-?reply|donotreply|notifications?@|news(?:letter)?@|marketing@|promo)/i,
+  shortcode: /^\+?\d{5,6}$/,
+  otp: /\b(code|passcode|otp)\b[^.]{0,40}\b\d{4,8}\b|\b\d{4,8}\b[^.]{0,40}\b(code|passcode)\b/i,
+  question: /\b(can|could|would|will|are|do|did|have) you\b[^?]{0,120}\?/i,
+  shortener: /\b(bit\.ly|tinyurl|t\.co|goo\.gl|rb\.gy|cutt\.ly)\//i,
+};
+const first = (rx, t) => (t.match(rx) || [""])[0];
+function features(text, sender, name, vips) {
+  const who = `${sender} ${name}`.toLowerCase();
+  return { urgent: first(R.urgent, text), when: first(R.when, text), money: first(R.money, text),
+    question: first(R.question, text), bulk: first(R.bulk, text), noreply: R.noreply.test(sender),
+    shortcode: R.shortcode.test(sender.trim()), otp: R.otp.test(text), shortener: first(R.shortener, text),
+    vip: vips.find((v) => v && who.includes(v.toLowerCase())) || "" };
+}
+function ruleScore(cp, f) {   // ported from scorer._rule_score
+  let s = Object.entries(cp).reduce((a, [c, p]) => a + p * DATA.categories[c].weight, 0);
+  const top = Object.keys(cp).reduce((a, b) => cp[a] > cp[b] ? a : b);
+  const reasons = [`Looks like: ${top} (${Math.round(cp[top] * 100)}%)`];
+  if (f.vip) { s += .30; reasons.push(`From a VIP: ${f.vip}`); }
+  if (f.urgent) { s += .15; reasons.push(`Urgent wording: “${f.urgent}”`); }
+  if (f.when && !["promo", "social", "scam", "delivery"].includes(top)) { s += .08; reasons.push(`Mentions a time: “${f.when}”`); }
+  if (f.question) { s += .10; reasons.push("Asks you a direct question"); }
+  if (f.money && ["bill", "work", "personal"].includes(top)) { s += .05; reasons.push(`Money involved: ${f.money}`); }
+  if (f.otp) { s -= .15; reasons.push("One-time code (only matters if you just asked for it)"); }
+  if (f.bulk) { s -= .25; reasons.push(`Bulk-mail sign: “${f.bulk}”`); }
+  if (f.noreply) { s -= .10; reasons.push("Sent from a no-reply / notifications address"); }
+  if (f.shortcode) { s -= .10; reasons.push("Automated short-code sender"); }
+  if (f.shortener) { s -= .20; reasons.push(`Shortened link (${f.shortener}), common in scams`); }
+  return { score: 100 * Math.min(Math.max(s, 0), 1), reasons, top };
+}
+
+// ---------- 1. try a message ----------
+const EXAMPLES = {
+  "🏠 Roommate text": ["Sam", "+15550177", "", "yo the landlord is coming at 4 today to fix the sink, can you be home? i'm stuck at work"],
+  "🛍️ “URGENT” promo": ["ShopWave", "deals@shopwave.example", "URGENT: 50% off ends tonight!", "Last chance! 50% off everything, today only. Use promo code SAVE50. Shop now. Unsubscribe"],
+  "🎣 Scam text": ["", "+18885550111", "", "USPS: your package is on hold due to an incomplete address. Update now at bit.ly/usps-r3deliver to avoid return."],
+  "💼 Boss email": ["Dana Whitfield", "boss@company.com", "Deck for tomorrow", "Can you send me the updated Q3 deck before the 9am client call tomorrow? Need to review the pricing slide."],
+  "👵 Mom": ["Mom", "+15550142", "", "Are you still coming to dinner Sunday? Grandma wants to know by tonight"],
+  "🔐 Login code": ["", "72166", "", "Your verification code is 482913. Don't share it with anyone."],
+  "💸 Overdue bill": ["City Utilities", "billing@cityutilities.example", "Final notice: payment past due", "Your balance of $142.80 is past due. Pay by Oct 14 to avoid service interruption."],
+};
+for (const [k, v] of Object.entries(EXAMPLES)) {
+  const b = document.createElement("button"); b.className = "chip"; b.textContent = k;
+  b.onclick = () => { [$("fromName").value, $("fromAddr").value, $("subject").value, $("body").value] = v; $("scoreBtn").click(); };
+  $("examples").append(b);
+}
+[$("fromName").value, $("fromAddr").value, $("subject").value, $("body").value] = EXAMPLES["🏠 Roommate text"];
+
+let zs;
+const keys = Object.keys(DATA.categories), labels = keys.map((k) => DATA.categories[k].label);
+$("scoreBtn").onclick = async () => {
+  const name = $("fromName").value, sender = $("fromAddr").value, subject = $("subject").value, body = $("body").value;
+  const text = (subject ? `${subject}. ${body}` : body).replace(/\s+/g, " ").trim();
+  if (!text) return;
+  $("scoreBtn").disabled = true;
+  try {
+    if (!zs) {
+      const seen = {};
+      zs = await pipeline("zero-shot-classification", "Xenova/nli-deberta-v3-xsmall", { dtype: "q8", progress_callback: (p) => {
+        if (p.status === "progress" && p.total) { seen[p.file] = p.loaded / p.total;
+          const avg = Object.values(seen).reduce((a, b) => a + b, 0) / Object.keys(seen).length;
+          $("status").textContent = `Downloading the model… ${Math.round(avg * 100)}% (only the first time)`; } } });
+    }
+    $("status").textContent = "Thinking…";
+    const out = await zs(text, labels, { hypothesis_template: DATA.hypothesis });
+    const cp = Object.fromEntries(out.labels.map((l, i) => [keys[labels.indexOf(l)], out.scores[i]]));
+    const vips = $("vips").value.split(",").map((v) => v.trim()).filter(Boolean);
+    const { score, reasons } = ruleScore(cp, features(text, sender, name, vips));
+    const tier = tierOf(score), col = tierColor(tier);
+    const C = 2 * Math.PI * 52, dash = (score / 100) * C;
+    $("result").innerHTML = `
+      <div style="display:flex;gap:16px;align-items:center;margin-top:8px">
+        <svg width="130" height="130" viewBox="0 0 130 130"><circle cx="65" cy="65" r="52" fill="none" stroke="${css("--soft")}" stroke-width="14"/>
+          <circle cx="65" cy="65" r="52" fill="none" stroke="${col}" stroke-width="14" stroke-linecap="round" stroke-dasharray="${dash} ${C}" transform="rotate(-90 65 65)"/>
+          <text x="65" y="74" text-anchor="middle" font-size="32" font-weight="800" fill="${col}">${Math.round(score)}</text></svg>
+        <div><span class="badge" style="background:${col}">${TIER_LABEL[tier]}</span>
+          <p class="sub" style="margin:8px 0 0">${tier === "important" ? "This one goes in your digest." : tier === "maybe" ? "Listed under “worth a glance”." : "You'll never be bothered by this."}</p></div>
+      </div>
+      <h3 style="margin-top:12px">Why</h3><ul class="reasons">${reasons.map((r) => `<li>${esc(r)}</li>`).join("")}</ul>
+      <h3>What kind of message is it?</h3>
+      ${out.labels.map((l, i) => `<div style="display:grid;grid-template-columns:100px 1fr 44px;gap:8px;align-items:center;font-size:13.5px;margin:3px 0">
+        <span>${keys[labels.indexOf(l)]}</span><div class="bar"><i style="width:${out.scores[i] * 100}%"></i></div><span style="text-align:right">${Math.round(out.scores[i] * 100)}%</span></div>`).join("")}`;
+    $("status").textContent = "";
+  } catch (e) { $("status").textContent = "Couldn't load the model: " + e.message; }
+  $("scoreBtn").disabled = false;
+};
+
+// ---------- 2. sample inbox ----------
+const msgs = DATA.messages;
+let showTier = "important";
+function drawList() {
+  $("tierChips").innerHTML = ["important", "maybe", "skip"].map((t) =>
+    `<button class="chip ${t === showTier ? "on" : ""}" data-t="${t}">${TIER_LABEL[t]} · ${msgs.filter((m) => m.tier === t).length}</button>`).join("");
+  $("tierChips").querySelectorAll("button").forEach((b) => b.onclick = () => { showTier = b.dataset.t; drawList(); });
+  $("list").innerHTML = msgs.filter((m) => m.tier === showTier).map((m) => `
+    <details class="msg"><summary><span class="score" style="background:${tierColor(m.tier)}">${Math.round(m.score)}</span>
+      <span><span class="from">${m.channel === "email" ? "✉️" : "💬"} ${esc(m.from)}</span> <span class="badge" style="background:${css("--soft")};color:${css("--text")};font-weight:600">${esc(m.category)}</span><br>
+      <span class="gist">${esc(m.gist)}</span></span></summary>
+      <p style="margin:10px 0 4px">${esc(m.text)}</p><ul class="reasons">${m.reasons.map((r) => `<li>${esc(r)}</li>`).join("")}</ul></details>`).join("");
+}
+drawList();
+$("notifs").innerHTML = msgs.filter((m) => m.tier === "important").slice(0, 6).map((m) =>
+  `<div class="notif"><b>${m.channel === "email" ? "✉️" : "💬"} ${esc(m.from)}</b> <small>· ${esc(m.category)}</small><br>${esc(m.gist.slice(0, 90))}</div>`).join("")
+  + `<div class="notif" style="text-align:center"><small>+ ${msgs.filter((m) => m.tier === "important").length - 6} more · ${msgs.filter((m) => m.tier === "skip").length} filtered out</small></div>`;
+
+// ---------- 3. threshold lab ----------
+$("thr").value = DATA.important_threshold;
+function lab() {
+  const t = +$("thr").value; $("thrVal").textContent = t + (t === DATA.important_threshold ? " (the app's default)" : "");
+  let tp = 0, fp = 0, fn = 0, tn = 0; const missed = [], fa = [];
+  msgs.forEach((m) => { const flag = m.score >= t;
+    if (flag && m.expected) tp++; else if (flag) { fp++; fa.push(m); } else if (m.expected) { fn++; missed.push(m); } else tn++; });
+  const prec = tp + fp ? tp / (tp + fp) : 1, rec = tp + fn ? tp / (tp + fn) : 1, acc = (tp + tn) / msgs.length;
+  const pct = (x) => Math.round(x * 100) + "%";
+  $("labMetrics").innerHTML = [["Recall", pct(rec), "important ones caught"], ["Precision", pct(prec), "flags that were right"], ["Accuracy", pct(acc), "overall"]]
+    .map(([k, v, s]) => `<div class="metric"><b>${v}</b><span>${k}: ${s}</span></div>`).join("");
+  $("cm").innerHTML = `<div class="h"></div><div class="h">Flagged</div><div class="h">Not flagged</div>
+    <div class="h" style="writing-mode:vertical-rl;transform:rotate(180deg)">Important</div>
+    <div style="background:${css("--pos")}22"><b>${tp}</b>caught ✅</div><div style="background:${css("--neg")}22"><b>${fn}</b>missed 🙈</div>
+    <div class="h" style="writing-mode:vertical-rl;transform:rotate(180deg)">Not</div>
+    <div style="background:${css("--warn")}22"><b>${fp}</b>false alarm 🔔</div><div style="background:${css("--soft")}"><b>${tn}</b>correctly ignored</div>`;
+  const item = (m) => `<div class="msg" style="padding:6px 12px"><b>${Math.round(m.score)}</b> · ${esc(m.from)}: <span class="gist">${esc(m.gist.slice(0, 80))}</span></div>`;
+  $("missed").innerHTML = missed.map(item).join("") || `<p class="sub">None. Every important message is caught. 🎉</p>`;
+  $("fa").innerHTML = fa.map(item).join("") || `<p class="sub">None.</p>`;
+}
+$("thr").oninput = lab; lab();
+</script>
+</body>
+</html>

@@ -14,11 +14,16 @@
 <h3 align="center">Hundreds of emails and texts a day. A handful actually matter.<br>This reads them all and sends you only those, with the reason why.</h3>
 
 <p align="center">
+  <a href="#play">🎮 Playground</a> ·
   <a href="#tour">🗺️ Take the tour</a> ·
   <a href="#run">🚀 Run it</a> ·
   <a href="#how">🧠 How it works</a> ·
   <a href="#results">📊 Results</a> ·
   <a href="notebooks/walkthrough.ipynb">📓 Notebook</a>
+</p>
+
+<p align="center">
+  <a href="https://cohenthecoder.github.io/inbox-signal/"><img src="https://img.shields.io/badge/%E2%96%B6%20Try%20it%20live-no%20install%2C%20runs%20in%20your%20browser-0d9488?style=for-the-badge" alt="Try it live"></a>
 </p>
 
 <p align="center">
@@ -34,6 +39,34 @@
 | 💯 **Scores it 0–100, with reasons** | Model + explainable signals: deadlines, "ASAP", money, VIP senders, unsubscribe links, sketchy short URLs. |
 | 📲 **Sends you the digest** | Only the important stuff, to your phone (ntfy), email or Slack, every morning on a schedule. |
 | 👍 **Learns your taste** | Thumbs up/down trains a personal model, starting with the messages it's least sure about. |
+
+---
+
+<a id="play"></a>
+## 🎮 Playground: try it in your browser
+
+<a href="https://cohenthecoder.github.io/inbox-signal/"><img src="docs/playground.png" alt="Playground"></a>
+
+**[▶ Open the playground](https://cohenthecoder.github.io/inbox-signal/)**. Real Hugging Face models run *inside the web page* through [transformers.js](https://huggingface.co/docs/transformers.js), with no install, no server and no sign-up. Anything you type stays in your browser.
+
+| Tab | What you can do |
+|---|---|
+| 📨 **Try a message** | Type any email or text and get a 0–100 score, a category, and every reason, live. |
+| 📥 **Sample inbox** | See what made the cut out of 30 messages, plus a phone mockup of your digest. |
+| 🎚️ **Threshold lab** | Drag the cutoff and watch precision and recall trade off on hand-labeled data. |
+
+<details>
+<summary>🔧 How the playground works (and how to run it locally)</summary>
+
+- It's a static site in [`playground/`](playground). One HTML file holds the same logic as the Python package, ported to JavaScript.
+- The browser downloads quantized ONNX versions of the models (`Xenova/…` on Hugging Face) once and caches them.
+- [`scripts/export_playground.py`](scripts/export_playground.py) exports the precomputed sample results the page displays.
+- [`.github/workflows/pages.yml`](.github/workflows/pages.yml) publishes it to GitHub Pages on every push.
+
+```bash
+cd playground && python3 -m http.server 8000     # then open http://localhost:8000
+```
+</details>
 
 ---
 
@@ -192,6 +225,7 @@ Click **▶ Try it with a sample inbox**, then **Score messages**. The first run
 ```
 inbox_signal/           the pipeline (one file per step)
 app.py · tour.py        Streamlit app + its "Start here" tour page
+playground/             in-browser playground (static site → GitHub Pages)
 notebooks/              walkthrough.ipynb: load model → classify → score → evaluate
 scripts/                make_dataset.py · train.py · run_digest.py (for cron)
 data/sample/            30 fictional messages with expected labels

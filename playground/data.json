@@ -1,0 +1,869 @@
+{
+ "model": "MoritzLaurer/deberta-v3-base-zeroshot-v2.0",
+ "categories": {
+  "personal": {
+   "label": "a personal message from a friend or family member",
+   "weight": 0.8
+  },
+  "work": {
+   "label": "a work request or a question that needs a reply",
+   "weight": 0.85
+  },
+  "bill": {
+   "label": "a bill, payment, or banking notice",
+   "weight": 0.7
+  },
+  "security": {
+   "label": "a security alert or account verification code",
+   "weight": 0.55
+  },
+  "appointment": {
+   "label": "an appointment, meeting, or schedule change",
+   "weight": 0.75
+  },
+  "delivery": {
+   "label": "a package delivery or order update",
+   "weight": 0.3
+  },
+  "promo": {
+   "label": "a newsletter or marketing promotion",
+   "weight": 0.05
+  },
+  "social": {
+   "label": "a social media notification",
+   "weight": 0.1
+  },
+  "scam": {
+   "label": "a scam or spam message",
+   "weight": 0.0
+  }
+ },
+ "hypothesis": "This message is {}.",
+ "important_threshold": 55,
+ "maybe_threshold": 35,
+ "messages": [
+  {
+   "id": "sample-00",
+   "channel": "sms",
+   "from": "Mom",
+   "subject": "",
+   "text": "Hi sweetie, are you still coming to dinner Sunday? Grandma wants to know by tonight so she can shop.",
+   "gist": "are you still coming to dinner Sunday?",
+   "category": "personal",
+   "score": 100.0,
+   "tier": "important",
+   "reasons": [
+    "Looks like: personal (86%)",
+    "From a VIP: Mom",
+    "Urgent wording: \u201cby tonight\u201d",
+    "Mentions a time: \u201cSunday\u201d",
+    "Asks you a direct question"
+   ],
+   "expected": 1,
+   "probs": {
+    "personal": 0.8639,
+    "appointment": 0.049,
+    "work": 0.0236,
+    "promo": 0.0184,
+    "scam": 0.0126,
+    "delivery": 0.0099,
+    "social": 0.0097,
+    "bill": 0.0087,
+    "security": 0.0043
+   }
+  },
+  {
+   "id": "sample-01",
+   "channel": "email",
+   "from": "Priya Raman",
+   "subject": "Q3 deck before client call",
+   "text": "Q3 deck before client call. Hi, can you send me the updated Q3 deck before the 2pm call with Brightline today? I need to review the pricing slide. Thanks!",
+   "gist": "Q3 deck before client call - can you send me the updated Q3 deck before the 2pm call with Brightline today?",
+   "category": "work",
+   "score": 100.0,
+   "tier": "important",
+   "reasons": [
+    "Looks like: work (94%)",
+    "Mentions a time: \u201c2pm\u201d",
+    "Asks you a direct question"
+   ],
+   "expected": 1,
+   "probs": {
+    "personal": 0.001,
+    "appointment": 0.0088,
+    "work": 0.9379,
+    "promo": 0.0028,
+    "scam": 0.0031,
+    "delivery": 0.0405,
+    "social": 0.001,
+    "bill": 0.003,
+    "security": 0.0019
+   }
+  },
+  {
+   "id": "sample-27",
+   "channel": "email",
+   "from": "Prof. Helen Wu",
+   "subject": "Recommendation letter",
+   "text": "Recommendation letter. I'm happy to write your recommendation letter. Could you send me your resume and the job description by Monday so I have time to write it?",
+   "gist": "Recommendation letter - I'm happy to write your recommendation letter.",
+   "category": "work",
+   "score": 100.0,
+   "tier": "important",
+   "reasons": [
+    "Looks like: work (97%)",
+    "Mentions a time: \u201cMonday\u201d",
+    "Asks you a direct question"
+   ],
+   "expected": 1,
+   "probs": {
+    "personal": 0.0024,
+    "appointment": 0.0072,
+    "work": 0.9675,
+    "promo": 0.0046,
+    "scam": 0.0066,
+    "delivery": 0.0035,
+    "social": 0.002,
+    "bill": 0.0029,
+    "security": 0.0033
+   }
+  },
+  {
+   "id": "sample-16",
+   "channel": "email",
+   "from": "Alicia Gomez",
+   "subject": "Interview availability - Data Scientist role",
+   "text": "Interview availability - Data Scientist role. Hi, thanks for applying to the Data Scientist position at Lumen Analytics. Are you available for a 30-minute phone screen Wednesday or Thursday afternoon? Please reply with times that work.",
+   "gist": "Interview availability - Data Scientist role - thanks for applying to the Data Scientist position at Lumen Analytics.",
+   "category": "work",
+   "score": 100.0,
+   "tier": "important",
+   "reasons": [
+    "Looks like: work (93%)",
+    "Mentions a time: \u201cWednesday\u201d",
+    "Asks you a direct question"
+   ],
+   "expected": 1,
+   "probs": {
+    "personal": 0.0012,
+    "appointment": 0.0431,
+    "work": 0.9325,
+    "promo": 0.012,
+    "scam": 0.0043,
+    "delivery": 0.0016,
+    "social": 0.0014,
+    "bill": 0.0018,
+    "security": 0.0021
+   }
+  },
+  {
+   "id": "sample-02",
+   "channel": "email",
+   "from": "City Utilities",
+   "subject": "Your bill is past due",
+   "text": "Your bill is past due. Your electricity bill of $142.80 is past due. Please pay by Oct 14 to avoid a $25 late fee and service interruption.",
+   "gist": "Your bill is past due - Your electricity bill of $142.80 is past due.",
+   "category": "bill",
+   "score": 97.8,
+   "tier": "important",
+   "reasons": [
+    "Looks like: bill (99%)",
+    "Urgent wording: \u201cpast due\u201d",
+    "Mentions a time: \u201cOct 14\u201d",
+    "Money involved: $142.80"
+   ],
+   "expected": 1,
+   "probs": {
+    "personal": 0.0003,
+    "appointment": 0.0002,
+    "work": 0.0003,
+    "promo": 0.0003,
+    "scam": 0.0022,
+    "delivery": 0.0003,
+    "social": 0.0005,
+    "bill": 0.9948,
+    "security": 0.0011
+   }
+  },
+  {
+   "id": "sample-15",
+   "channel": "sms",
+   "from": "Mom",
+   "subject": "",
+   "text": "Also dad says happy early birthday \ud83c\udf82",
+   "gist": "Also dad says happy early birthday \ud83c\udf82",
+   "category": "personal",
+   "score": 93.7,
+   "tier": "important",
+   "reasons": [
+    "Looks like: personal (67%)",
+    "From a VIP: Mom"
+   ],
+   "expected": 0,
+   "probs": {
+    "personal": 0.6656,
+    "appointment": 0.0282,
+    "work": 0.0354,
+    "promo": 0.0402,
+    "scam": 0.0355,
+    "delivery": 0.0349,
+    "social": 0.1146,
+    "bill": 0.0294,
+    "security": 0.0161
+   }
+  },
+  {
+   "id": "sample-21",
+   "channel": "sms",
+   "from": "Aunt Ruth",
+   "subject": "",
+   "text": "Call me when you can, it's about Grandpa. Nothing scary but want to talk today.",
+   "gist": "Call me when you can, it's about Grandpa.",
+   "category": "personal",
+   "score": 89.2,
+   "tier": "important",
+   "reasons": [
+    "Looks like: personal (63%)",
+    "Urgent wording: \u201cCall me\u201d",
+    "Mentions a time: \u201ctoday\u201d"
+   ],
+   "expected": 1,
+   "probs": {
+    "personal": 0.6326,
+    "appointment": 0.0936,
+    "work": 0.042,
+    "promo": 0.0577,
+    "scam": 0.0561,
+    "delivery": 0.0323,
+    "social": 0.0303,
+    "bill": 0.0259,
+    "security": 0.0296
+   }
+  },
+  {
+   "id": "sample-08",
+   "channel": "sms",
+   "from": "Sam (roommate)",
+   "subject": "",
+   "text": "yo the landlord is coming at 4 today to fix the sink, can you be home? i'm stuck at work",
+   "gist": "yo the landlord is coming at 4 today to fix the sink, can you be home?",
+   "category": "work",
+   "score": 85.1,
+   "tier": "important",
+   "reasons": [
+    "Looks like: work (54%)",
+    "Mentions a time: \u201ctoday\u201d",
+    "Asks you a direct question"
+   ],
+   "expected": 1,
+   "probs": {
+    "personal": 0.0748,
+    "appointment": 0.1175,
+    "work": 0.5383,
+    "promo": 0.0355,
+    "scam": 0.071,
+    "delivery": 0.0252,
+    "social": 0.0587,
+    "bill": 0.0479,
+    "security": 0.0312
+   }
+  },
+  {
+   "id": "sample-07",
+   "channel": "sms",
+   "from": "Dr. Alvarez Dental",
+   "subject": "",
+   "text": "Reminder: your dentist appointment is tomorrow at 9:30am with Dr. Alvarez. Reply C to confirm or call to reschedule.",
+   "gist": "Reminder: your dentist appointment is tomorrow at 9:30am with Dr.",
+   "category": "appointment",
+   "score": 82.0,
+   "tier": "important",
+   "reasons": [
+    "Looks like: appointment (97%)",
+    "Mentions a time: \u201ctomorrow\u201d"
+   ],
+   "expected": 1,
+   "probs": {
+    "personal": 0.0019,
+    "appointment": 0.9711,
+    "work": 0.0043,
+    "promo": 0.0075,
+    "scam": 0.0023,
+    "delivery": 0.0013,
+    "social": 0.0033,
+    "bill": 0.0064,
+    "security": 0.002
+   }
+  },
+  {
+   "id": "sample-12",
+   "channel": "email",
+   "from": "Jordan Lee",
+   "subject": "Wedding - can you be a groomsman?",
+   "text": "Wedding - can you be a groomsman?. Hey! Taylor and I set the date for June 14. Would you be one of my groomsmen? Would mean a lot. Let me know when you get a chance.",
+   "gist": "Wedding - can you be a groomsman? - Taylor and I set the date for June 14.",
+   "category": "appointment",
+   "score": 74.0,
+   "tier": "important",
+   "reasons": [
+    "Looks like: appointment (27%)",
+    "Mentions a time: \u201cJune 14\u201d",
+    "Asks you a direct question"
+   ],
+   "expected": 1,
+   "probs": {
+    "personal": 0.2114,
+    "appointment": 0.2695,
+    "work": 0.1591,
+    "promo": 0.1031,
+    "scam": 0.0699,
+    "delivery": 0.0209,
+    "social": 0.1172,
+    "bill": 0.0219,
+    "security": 0.027
+   }
+  },
+  {
+   "id": "sample-25",
+   "channel": "sms",
+   "from": "Sam (roommate)",
+   "subject": "",
+   "text": "rent is due on the 1st, venmo me $850 when you get a chance",
+   "gist": "rent is due on the 1st, venmo me $850 when you get a chance",
+   "category": "bill",
+   "score": 72.4,
+   "tier": "important",
+   "reasons": [
+    "Looks like: bill (95%)",
+    "Money involved: $850"
+   ],
+   "expected": 1,
+   "probs": {
+    "personal": 0.0024,
+    "appointment": 0.0015,
+    "work": 0.0022,
+    "promo": 0.0067,
+    "scam": 0.0278,
+    "delivery": 0.0019,
+    "social": 0.0024,
+    "bill": 0.9527,
+    "security": 0.0023
+   }
+  },
+  {
+   "id": "sample-11",
+   "channel": "email",
+   "from": "Northwind HR",
+   "subject": "ACTION REQUIRED: Benefits enrollment closes Friday",
+   "text": "ACTION REQUIRED: Benefits enrollment closes Friday. Open enrollment for 2027 benefits closes this Friday, Oct 10. If you don't make a selection, you'll be defaulted into last year's plan. Please complete enrollment in the HR portal.",
+   "gist": "ACTION REQUIRED: Benefits enrollment closes Friday - Open enrollment for 2027 benefits closes this Friday, Oct 10.",
+   "category": "work",
+   "score": 71.9,
+   "tier": "important",
+   "reasons": [
+    "Looks like: work (31%)",
+    "Urgent wording: \u201cACTION REQUIRED\u201d",
+    "Mentions a time: \u201cFriday\u201d"
+   ],
+   "expected": 1,
+   "probs": {
+    "personal": 0.0205,
+    "appointment": 0.0381,
+    "work": 0.3138,
+    "promo": 0.1086,
+    "scam": 0.168,
+    "delivery": 0.0593,
+    "social": 0.0377,
+    "bill": 0.0717,
+    "security": 0.1822
+   }
+  },
+  {
+   "id": "sample-14",
+   "channel": "email",
+   "from": "First Bank",
+   "subject": "Unusual sign-in attempt",
+   "text": "Unusual sign-in attempt. We noticed a sign-in to your account from a new device in Denver, CO. If this wasn't you, secure your account immediately.",
+   "gist": "Unusual sign-in attempt - We noticed a sign-in to your account from a new device in Denver, CO.",
+   "category": "security",
+   "score": 69.1,
+   "tier": "important",
+   "reasons": [
+    "Looks like: security (96%)",
+    "Urgent wording: \u201cimmediately\u201d"
+   ],
+   "expected": 1,
+   "probs": {
+    "personal": 0.0018,
+    "appointment": 0.0019,
+    "work": 0.0107,
+    "promo": 0.0018,
+    "scam": 0.0186,
+    "delivery": 0.0015,
+    "social": 0.0042,
+    "bill": 0.0019,
+    "security": 0.9576
+   }
+  },
+  {
+   "id": "sample-22",
+   "channel": "email",
+   "from": "City Library",
+   "subject": "Items due soon",
+   "text": "Items due soon. Reminder: 2 items are due on Oct 15. Renew online to avoid late fees.",
+   "gist": "Items due soon - Reminder: 2 items are due on Oct 15.",
+   "category": "bill",
+   "score": 66.5,
+   "tier": "important",
+   "reasons": [
+    "Looks like: bill (97%)",
+    "Mentions a time: \u201cOct 15\u201d",
+    "Sent from a no-reply / notifications address"
+   ],
+   "expected": 0,
+   "probs": {
+    "personal": 0.0017,
+    "appointment": 0.0018,
+    "work": 0.0022,
+    "promo": 0.0106,
+    "scam": 0.0078,
+    "delivery": 0.0033,
+    "social": 0.0029,
+    "bill": 0.9658,
+    "security": 0.0039
+   }
+  },
+  {
+   "id": "sample-19",
+   "channel": "email",
+   "from": "Google Calendar",
+   "subject": "Updated invitation: Team sync moved to 3pm",
+   "text": "Updated invitation: Team sync moved to 3pm. The Team sync on Thursday has been moved from 10am to 3pm by Dana Whitfield.",
+   "gist": "Updated invitation: Team sync moved to 3pm - The Team sync on Thursday has been moved from 10am to 3pm by Dana Whitfield.",
+   "category": "appointment",
+   "score": 64.8,
+   "tier": "important",
+   "reasons": [
+    "Looks like: appointment (82%)",
+    "Mentions a time: \u201c3pm\u201d",
+    "Sent from a no-reply / notifications address"
+   ],
+   "expected": 1,
+   "probs": {
+    "personal": 0.0022,
+    "appointment": 0.8226,
+    "work": 0.0387,
+    "promo": 0.0368,
+    "scam": 0.0036,
+    "delivery": 0.0038,
+    "social": 0.0836,
+    "bill": 0.0038,
+    "security": 0.0049
+   }
+  },
+  {
+   "id": "sample-24",
+   "channel": "email",
+   "from": "Maria Chen",
+   "subject": "Re: budget numbers",
+   "text": "Re: budget numbers. Thanks - got it. No action needed on your end, I'll fold these into the forecast.",
+   "gist": "Re: budget numbers - Thanks - got it.",
+   "category": "work",
+   "score": 56.4,
+   "tier": "important",
+   "reasons": [
+    "Looks like: work (36%)"
+   ],
+   "expected": 0,
+   "probs": {
+    "personal": 0.0466,
+    "appointment": 0.0676,
+    "work": 0.3564,
+    "promo": 0.084,
+    "scam": 0.1007,
+    "delivery": 0.0785,
+    "social": 0.0533,
+    "bill": 0.1522,
+    "security": 0.0608
+   }
+  },
+  {
+   "id": "sample-20",
+   "channel": "email",
+   "from": "Corner Cafe",
+   "subject": "Your receipt",
+   "text": "Your receipt. Thanks for your order! Total: $8.45. See you next time.",
+   "gist": "Your receipt - Thanks for your order!",
+   "category": "bill",
+   "score": 51.4,
+   "tier": "maybe",
+   "reasons": [
+    "Looks like: bill (46%)",
+    "Money involved: $8.45"
+   ],
+   "expected": 0,
+   "probs": {
+    "personal": 0.0119,
+    "appointment": 0.0397,
+    "work": 0.0188,
+    "promo": 0.1174,
+    "scam": 0.0853,
+    "delivery": 0.2272,
+    "social": 0.0189,
+    "bill": 0.4569,
+    "security": 0.0239
+   }
+  },
+  {
+   "id": "sample-18",
+   "channel": "sms",
+   "from": "Chris",
+   "subject": "",
+   "text": "lol did you see the game last night",
+   "gist": "lol did you see the game last night",
+   "category": "social",
+   "score": 32.3,
+   "tier": "skip",
+   "reasons": [
+    "Looks like: social (46%)"
+   ],
+   "expected": 0,
+   "probs": {
+    "personal": 0.0778,
+    "appointment": 0.0383,
+    "work": 0.089,
+    "promo": 0.0699,
+    "scam": 0.0785,
+    "delivery": 0.0421,
+    "social": 0.46,
+    "bill": 0.0973,
+    "security": 0.047
+   }
+  },
+  {
+   "id": "sample-06",
+   "channel": "email",
+   "from": "ParcelNow",
+   "subject": "Your order has shipped",
+   "text": "Your order has shipped. Your order #1182 has shipped and will arrive Thursday. Track your package anytime.",
+   "gist": "Your order has shipped - Your order #1182 has shipped and will arrive Thursday.",
+   "category": "delivery",
+   "score": 30.1,
+   "tier": "skip",
+   "reasons": [
+    "Looks like: delivery (91%)"
+   ],
+   "expected": 0,
+   "probs": {
+    "personal": 0.002,
+    "appointment": 0.0018,
+    "work": 0.003,
+    "promo": 0.0139,
+    "scam": 0.0155,
+    "delivery": 0.9143,
+    "social": 0.0162,
+    "bill": 0.0066,
+    "security": 0.0267
+   }
+  },
+  {
+   "id": "sample-10",
+   "channel": "sms",
+   "from": "+18885550111",
+   "subject": "",
+   "text": "USPS: Your package is on hold due to an incomplete address. Update now at bit.ly/usps-redeliv3r to avoid return.",
+   "gist": "USPS: Your package is on hold due to an incomplete address.",
+   "category": "delivery",
+   "score": 10.2,
+   "tier": "skip",
+   "reasons": [
+    "Looks like: delivery (95%)",
+    "Shortened link (bit.ly/) - common in scams"
+   ],
+   "expected": 0,
+   "probs": {
+    "personal": 0.0006,
+    "appointment": 0.0008,
+    "work": 0.0017,
+    "promo": 0.001,
+    "scam": 0.0036,
+    "delivery": 0.9469,
+    "social": 0.0207,
+    "bill": 0.0008,
+    "security": 0.0238
+   }
+  },
+  {
+   "id": "sample-29",
+   "channel": "email",
+   "from": "Meetup",
+   "subject": "3 new events near you",
+   "text": "3 new events near you. Data Science NYC is hosting a talk next week. RSVP now.",
+   "gist": "3 new events near you - Data Science NYC is hosting a talk next week.",
+   "category": "promo",
+   "score": 9.3,
+   "tier": "skip",
+   "reasons": [
+    "Looks like: promo (85%)"
+   ],
+   "expected": 0,
+   "probs": {
+    "personal": 0.0019,
+    "appointment": 0.0365,
+    "work": 0.0096,
+    "promo": 0.8549,
+    "scam": 0.0096,
+    "delivery": 0.0036,
+    "social": 0.076,
+    "bill": 0.0044,
+    "security": 0.0035
+   }
+  },
+  {
+   "id": "sample-26",
+   "channel": "email",
+   "from": "LinkedIn",
+   "subject": "You appeared in 12 searches this week",
+   "text": "You appeared in 12 searches this week. See who's looking at your profile. Try Premium free for 1 month.",
+   "gist": "You appeared in 12 searches this week - See who's looking at your profile.",
+   "category": "scam",
+   "score": 5.5,
+   "tier": "skip",
+   "reasons": [
+    "Looks like: scam (83%)"
+   ],
+   "expected": 0,
+   "probs": {
+    "personal": 0.0045,
+    "appointment": 0.0059,
+    "work": 0.0106,
+    "promo": 0.0641,
+    "scam": 0.8328,
+    "delivery": 0.0072,
+    "social": 0.0232,
+    "bill": 0.0125,
+    "security": 0.0392
+   }
+  },
+  {
+   "id": "sample-05",
+   "channel": "email",
+   "from": "Instagram",
+   "subject": "jake_m liked your photo",
+   "text": "jake_m liked your photo. jake_m and 3 others liked your photo. See what's new in your feed.",
+   "gist": "jake_m liked your photo - jake_m and 3 others liked your photo.",
+   "category": "social",
+   "score": 0.7,
+   "tier": "skip",
+   "reasons": [
+    "Looks like: social (98%)",
+    "Sent from a no-reply / notifications address"
+   ],
+   "expected": 0,
+   "probs": {
+    "personal": 0.0022,
+    "appointment": 0.0019,
+    "work": 0.0022,
+    "promo": 0.0046,
+    "scam": 0.0037,
+    "delivery": 0.0016,
+    "social": 0.9785,
+    "bill": 0.0015,
+    "security": 0.0039
+   }
+  },
+  {
+   "id": "sample-09",
+   "channel": "email",
+   "from": "Market Morning",
+   "subject": "Your daily markets briefing",
+   "text": "Your daily markets briefing. Stocks rallied on Tuesday as tech shares rebounded. Here are the five stories you need to know today. You're receiving this because you subscribed. Unsubscribe.",
+   "gist": "Your daily markets briefing - Stocks rallied on Tuesday as tech shares rebounded.",
+   "category": "scam",
+   "score": 0.0,
+   "tier": "skip",
+   "reasons": [
+    "Looks like: scam (39%)",
+    "Bulk-mail sign: \u201cYou're receiving this\u201d",
+    "Sent from a no-reply / notifications address"
+   ],
+   "expected": 0,
+   "probs": {
+    "personal": 0.0086,
+    "appointment": 0.0352,
+    "work": 0.0641,
+    "promo": 0.2789,
+    "scam": 0.3867,
+    "delivery": 0.0915,
+    "social": 0.0488,
+    "bill": 0.0226,
+    "security": 0.0635
+   }
+  },
+  {
+   "id": "sample-03",
+   "channel": "sms",
+   "from": "72166",
+   "subject": "",
+   "text": "Your Chase verification code is 482913. Don't share it with anyone. We'll never call to ask for it.",
+   "gist": "Your Chase verification code is 482913.",
+   "category": "scam",
+   "score": 0.0,
+   "tier": "skip",
+   "reasons": [
+    "Looks like: scam (73%)",
+    "One-time code (only matters if you just asked for it)",
+    "Automated short-code sender"
+   ],
+   "expected": 0,
+   "probs": {
+    "personal": 0.0005,
+    "appointment": 0.0008,
+    "work": 0.001,
+    "promo": 0.0017,
+    "scam": 0.7286,
+    "delivery": 0.0015,
+    "social": 0.0008,
+    "bill": 0.0059,
+    "security": 0.2593
+   }
+  },
+  {
+   "id": "sample-04",
+   "channel": "email",
+   "from": "ShopWave",
+   "subject": "FLASH SALE 40% off everything",
+   "text": "FLASH SALE 40% off everything. This weekend only! 40% off sitewide plus free shipping. Use promo code FALL40. Shop now. Unsubscribe | Manage preferences",
+   "gist": "FLASH SALE 40% off everything - This weekend only!",
+   "category": "promo",
+   "score": 0.0,
+   "tier": "skip",
+   "reasons": [
+    "Looks like: promo (65%)",
+    "Bulk-mail sign: \u201c% off\u201d"
+   ],
+   "expected": 0,
+   "probs": {
+    "personal": 0.0006,
+    "appointment": 0.0009,
+    "work": 0.0014,
+    "promo": 0.6542,
+    "scam": 0.3199,
+    "delivery": 0.0014,
+    "social": 0.0177,
+    "bill": 0.0022,
+    "security": 0.0018
+   }
+  },
+  {
+   "id": "sample-13",
+   "channel": "email",
+   "from": "StreamFlix",
+   "subject": "New this week on StreamFlix",
+   "text": "New this week on StreamFlix. Five new shows we think you'll love. Start watching now. View in browser.",
+   "gist": "New this week on StreamFlix - Five new shows we think you'll love.",
+   "category": "promo",
+   "score": 0.0,
+   "tier": "skip",
+   "reasons": [
+    "Looks like: promo (91%)",
+    "Bulk-mail sign: \u201cView in browser\u201d",
+    "Sent from a no-reply / notifications address"
+   ],
+   "expected": 0,
+   "probs": {
+    "personal": 0.0023,
+    "appointment": 0.0029,
+    "work": 0.0056,
+    "promo": 0.9126,
+    "scam": 0.0483,
+    "delivery": 0.0053,
+    "social": 0.0125,
+    "bill": 0.004,
+    "security": 0.0063
+   }
+  },
+  {
+   "id": "sample-17",
+   "channel": "email",
+   "from": "Taskly",
+   "subject": "Tips: 5 ways to organize your week",
+   "text": "Tips: 5 ways to organize your week. Get more done with these five quick tips. Upgrade to Pro for 20% off - limited time. Unsubscribe.",
+   "gist": "Tips: 5 ways to organize your week - Get more done with these five quick tips.",
+   "category": "promo",
+   "score": 0.0,
+   "tier": "skip",
+   "reasons": [
+    "Looks like: promo (51%)",
+    "Bulk-mail sign: \u201c% off\u201d"
+   ],
+   "expected": 0,
+   "probs": {
+    "personal": 0.0011,
+    "appointment": 0.003,
+    "work": 0.0052,
+    "promo": 0.5123,
+    "scam": 0.4452,
+    "delivery": 0.0032,
+    "social": 0.0198,
+    "bill": 0.006,
+    "security": 0.0042
+   }
+  },
+  {
+   "id": "sample-23",
+   "channel": "email",
+   "from": "Prize Center",
+   "subject": "Congratulations! You've been selected",
+   "text": "Congratulations! You've been selected. You have been selected to receive a $1,000 gift card. Click here to claim your reward within 24 hours. Limited time.",
+   "gist": "Congratulations! You've been selected - You have been selected to receive a $1,000 gift card.",
+   "category": "promo",
+   "score": 0.0,
+   "tier": "skip",
+   "reasons": [
+    "Looks like: promo (47%)",
+    "Bulk-mail sign: \u201cLimited time\u201d"
+   ],
+   "expected": 0,
+   "probs": {
+    "personal": 0.003,
+    "appointment": 0.0033,
+    "work": 0.0042,
+    "promo": 0.4651,
+    "scam": 0.4414,
+    "delivery": 0.0045,
+    "social": 0.044,
+    "bill": 0.0098,
+    "security": 0.0248
+   }
+  },
+  {
+   "id": "sample-28",
+   "channel": "sms",
+   "from": "39752",
+   "subject": "",
+   "text": "CVS Pharmacy: Your prescription is ready for pickup at 120 Main St. Reply STOP to opt out.",
+   "gist": "CVS Pharmacy: Your prescription is ready for pickup at 120 Main St.",
+   "category": "scam",
+   "score": 0.0,
+   "tier": "skip",
+   "reasons": [
+    "Looks like: scam (91%)",
+    "Bulk-mail sign: \u201cReply STOP\u201d",
+    "Automated short-code sender"
+   ],
+   "expected": 1,
+   "probs": {
+    "personal": 0.0024,
+    "appointment": 0.0035,
+    "work": 0.0039,
+    "promo": 0.0449,
+    "scam": 0.9056,
+    "delivery": 0.0054,
+    "social": 0.0129,
+    "bill": 0.0109,
+    "security": 0.0105
+   }
+  }
+ ]
+}
